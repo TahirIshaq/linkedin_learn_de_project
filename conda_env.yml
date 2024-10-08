@@ -1,0 +1,12 @@
+name: my_env
+channels:
+  - defaults
+dependencies:
+  - python==3.10
+  - pip
+  - pip:
+    - psycopg2-binary==2.9.9
+    - boto3==1.35.24
+    - pyarrow==17.0.0
+    - pandas==2.2.3
+    - SQLAlchemy==2.0.35
