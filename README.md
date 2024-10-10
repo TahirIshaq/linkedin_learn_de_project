@@ -28,3 +28,24 @@ List all the tables: `\d`
 Add a pg admin container in `docker-compose.yml`, access the destination database and list the tables.
 ### Option 3
 Add a function in `elt.py` that queries the destination database and verify the contents.
+
+## Part 2 (Data Transformation)
+### Project initilization
+Since we used postgres as our destination database, we will use dbt postgres connector to transform the data.
+`dbt init transform_data` will create a dbt project called **transform_data**. This will create the dbt project file structure.
+`transform_data/dbt_project.yml` contains the dbt project configuration e.g. path of `model, tests, macros, profiles etc`. Project initialization also creates a connection profile which in this case is a postgres connector. The default localtion of profiles is `~/.dbt/profiles.yml`. For this project, `profiles.yml` was saved in `transform_data/config/profiles.yml`. `export DBT_PROFILES_DIR=/workspaces/linkedin_learn_de_project/transform_data/config/` will change the path of `profiles.yml`.
+### Configuring profiles.yml
+To make our credentials more secure, we will set the profiles credentials using jinja. The credentials will be read from the environment variables(which need to be set). Make sure to cast/convert any non string variables e.g. port number.
+### Testing the connection
+Run `dbt debug` in dbt directory to test the profile. To run this command from anywhere set the path of `dbt_project.yml` in `DBT_PROJECT_DIR`.
+### Models
+Models are `.sql` files i.e. containing sql commands(only SELECT). The modelling is divided in 2 logical parts `staging` and `core/marts`.
+All models can either be a view(default) or a table. The output can be changed by configuring `dbt_project.yml` or the model file individually (at the start of the model file).
+
+**Staging**
+
+This is first step in data modelling and everything is a view.
+
+**Marts/Core**
+
+This is the final step in data modelling and everything(all tables/.sql files) is/are a table.

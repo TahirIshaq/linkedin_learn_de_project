@@ -3,3 +3,4 @@ boto3==1.35.24
 pyarrow==17.0.0
 pandas==2.2.
 SQLAlchemy==2.0.35
+dbt-postgres==1.8.2
