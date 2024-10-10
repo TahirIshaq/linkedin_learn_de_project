@@ -1,0 +1,85 @@
+# This file contains information about the database, its tables and the models that we will create in staging
+# To run a query on customers: SELECT * FROM {{ source("raw_data", "customers") }};
+# Have not tested with multiple sources
+
+version: 2
+
+sources:
+  - name: raw_data
+    database: test-db
+    schema: public
+
+    tables:
+      - name: customers
+      - name: orders
+      - name: products
+      - name: order_items
+
+# Model details will be generated using dbt package "dbt-labs/codegen" after the models have be written.
+models:
+  - name: stg_customers
+    description: ""
+    columns:
+      - name: customer_id
+        data_type: bigint
+        description: ""
+        tests:
+          - unique
+          - not_null
+
+      - name: email
+        data_type: text
+        description: ""
+
+      - name: gender
+        data_type: text
+        description: ""
+
+      - name: city
+        data_type: text
+        description: ""
+
+      - name: country
+        data_type: text
+        description: ""
+
+  - name: stg_orders
+    description: ""
+    columns:
+      - name: order_id
+        data_type: bigint
+        description: ""
+        tests:
+          - unique
+          - not_null
+
+      - name: customer_id
+        data_type: bigint
+        description: ""
+        tests:
+          - relationships:
+              to: ref('stg_customers')
+              field: customer_id
+
+      - name: order_status
+        data_type: timestamp without time zone
+        description: ""
+        test:
+          - accepted_values:
+            values:
+              - created
+              - shipped
+              - approved
+              - canceled
+              - invoiced
+              - delivered
+              - processing
+              - unavailable
+
+      - name: order_approved_at
+        data_type: timestamp without time zone
+        description: ""
+
+      - name: order_delivered_at
+        data_type: timestamp without time zone
+        description: ""

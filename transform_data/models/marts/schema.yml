@@ -1,0 +1,43 @@
+version: 2
+
+models:
+  - name: dim_customers
+    description: ""
+    columns:
+      - name: customer_id
+        data_type: bigint
+        description: ""
+        tests:
+          - unique
+          - not_null
+
+      - name: email
+        data_type: text
+        description: ""
+        tests:
+          - not_null
+
+      - name: country
+        data_type: text
+        description: ""
+        tests:
+          - not_null
+
+      - name: city
+        data_type: text
+        description: ""
+        tests:
+          - not_null
+
+      - name: first_order_date
+        data_type: timestamp without time zone
+        description: ""
+
+      - name: most_recent_date
+        data_type: timestamp without time zone
+        description: ""
+
+      - name: number_of_orders
+        data_type: bigint
+        description: ""
+

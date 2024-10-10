@@ -49,3 +49,20 @@ This is first step in data modelling and everything is a view.
 **Marts/Core**
 
 This is the final step in data modelling and everything(all tables/.sql files) is/are a table.
+
+### DBT packages
+`touch transform_data/packages.yml` will create the packages file.
+The package [codegen](https://hub.getdbt.com/dbt-labs/codegen/latest/) is used to generate dbt code.
+```
+packages:
+    - package: dbt-labs/codegen
+      version: 0.12.1
+```
+Install the package `dbt deps`
+Generate the model information of the models that have that have been completed `dbt --quiet run-operation generate_model_yaml --args '{"model_names": ["stg_customers", "stg_orders"]}' > models/staging/stg_models.yml`. There are 2 options either have 2 yml file 1 for model details and 1 for source or just copy the models details to schemy.yml and delete the file.
+After this, [tests](https://docs.getdbt.com/docs/build/data-tests) can be added for each column
+
+To have a look at the compiled code of models `dbt compile`.
+The compiled code can be found in `transform_data/target/compiled/stg_orders`
+To apply the compiled model `dbt build`. This will run a collection of commands including `dbt compile`
+Run `dt clean` and then commit the changes. This will remove any installed packages hence reducing size(I think)
