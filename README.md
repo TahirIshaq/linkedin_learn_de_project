@@ -5,7 +5,7 @@ Linkedin learning data engineering end to end project
 1. `git clone https://github.com/TahirIshaq/linkedin_learn_de_project`
 2. `docker compose up -d`
 3. `pip install -r requirements.txt`
-4. `. ./s3_env_vars.sh && . ./source_db_vars.sh && . ./destination_db_vars.sh`
+4. `. ./s3_env_vars.sh && . ./source_db_env_vars.sh && . ./destination_db_env_vars.sh`
 5. `python elt.py`
 
 ### (Optional) Use a python virtual environment
@@ -66,3 +66,17 @@ To have a look at the compiled code of models `dbt compile`.
 The compiled code can be found in `transform_data/target/compiled/stg_orders`
 To apply the compiled model `dbt build`. This will run a collection of commands including `dbt compile`
 Run `dt clean` and then commit the changes. This will remove any installed packages hence reducing size(I think)
+
+## Part 3 Orchestration
+ETL using airflow. In this case airflow will be used via docker
+Open airflow weserver `localhost:8080` and login with the configured credentials `username: admin, password: admin` or which have been set.
+Airflow S3 [connection](https://airflow.apache.org/docs/apache-airflow-providers-amazon/stable/connections/aws.html)
+
+links to lookup
+- tv
+- https://www.astronomer.io/docs/learn/airflow-passing-data-between-tasks?tab=taskflow#example-dag-using-xcoms
+- https://airflow.apache.org/docs/apache-airflow/stable/tutorial/taskflow.html
+- https://www.astronomer.io/blog/apache-airflow-taskflow-api-vs-traditional-operators/
+- https://airflow.apache.org/docs/apache-airflow-providers-amazon/stable/transfer/sql_to_s3.html
+- https://airflow.apache.org/docs/apache-airflow-providers-amazon/stable/_api/airflow/providers/amazon/aws/transfers/sql_to_s3/index.html#airflow.providers.amazon.aws.transfers.sql_to_s3.SqlToS3Operator
+- https://airflow.apache.org/docs/apache-airflow/stable/authoring-and-scheduling/dynamic-task-mapping.html

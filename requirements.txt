@@ -1,6 +1,8 @@
 psycopg2-binary==2.9.9
 boto3==1.35.24
 pyarrow==17.0.0
-pandas==2.2.
-SQLAlchemy==2.0.35
+pandas==2.1.4
+#SQLAlchemy==2.0.35     # Skipping for airflow as it installs is a prerequisite for airflow iteself and a different version can cause dependency issue
 dbt-postgres==1.8.2
+apache-airflow-providers-amazon==8.28.0 # This is for airflow
+apache-airflow-providers-postgres==5.13.0 # To configure airflow connector in UI

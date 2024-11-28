@@ -1,3 +1,4 @@
+# conda env create -f conda_env.yml
 name: my_env
 channels:
   - defaults
@@ -8,6 +9,6 @@ dependencies:
     - psycopg2-binary==2.9.9
     - boto3==1.35.24
     - pyarrow==17.0.0
-    - pandas==2.2.3
+    - pandas==2.1.4
     - SQLAlchemy==2.0.35
     - dbt-postgres==1.8.2

@@ -90,6 +90,12 @@ def table_to_pd_df(conn, table_name, schema_name, table_cols):
         df = pd.DataFrame(rows, columns=table_cols)
     return df
 
+def upload_io_postgres(conn):
+    """Upload df to postgres"""
+    with create_engine(conn).connect() as con:
+        df.to_sql(name=table, con=con, if_exists="replace")
+        print(f"{table} inserted in destination database")
+
 
 def upload_to_s3(bucket_name, sub_dir, table_name, df):
     """Converts pandas DataFrame to parquet and uploads it to S3"""

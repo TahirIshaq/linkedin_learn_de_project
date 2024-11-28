@@ -27,9 +27,11 @@ services:
       interval: 5s
       retries: 5
     restart: always
+    command: [ "postgres", "-c", "wal_level=logical" ]
+
 
   destination_db:
-    image: postgres:14
+    image: postgres:latest
     container_name: destination_db
     env_file:
       - destination_db.env
@@ -40,3 +42,77 @@ services:
       interval: 5s
       retries: 5
     restart: always
+
+# Airflow start
+  postgres:
+    image: postgres:14
+    container_name: airflow_postgres
+    env_file:
+      - airflow.env
+    volumes:
+      - postgres-db-volume:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD", "pg_isready", "-U", "airflow"]
+      interval: 5s
+      retries: 5
+    restart: always
+
+  scheduler:
+    build: .
+    container_name: airflow_scheduler
+    command: scheduler
+    restart: on-failure
+    depends_on:
+      postgres:
+        condition: service_healthy
+      s3:
+        condition: service_healthy
+    env_file:
+      - airflow.env
+    environment:
+      AIRFLOW__SCHEDULER__ENABLE_HEALTH_CHECK: 'true'
+    volumes:
+      - ./dags:/opt/airflow/dags
+      - ./logs:/opt/airflow/logs
+      - ./plugins:/opt/airflow/plugins
+      - ./scripts:/opt/airflow/scripts
+      #- ./.aws/:/home/airflow/.aws:ro
+    healthcheck:
+      test: ["CMD", "curl", "--fail", "http://localhost:8974/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 30s
+
+  webserver:
+    build: .
+    container_name: airflow_webserver
+    # command: bash ./scripts/entrypoint.sh
+    entrypoint: bash ./scripts/entrypoint.sh
+    restart: on-failure
+    depends_on:
+      postgres:
+        condition: service_healthy
+      s3:
+        condition: service_healthy
+    env_file:
+      - airflow.env
+    volumes:
+      - ./dags:/opt/airflow/dags
+      - ./logs:/opt/airflow/logs
+      - ./plugins:/opt/airflow/plugins
+      #- ./.aws/:/home/airflow/.aws:ro
+      - ./scripts:/opt/airflow/scripts
+
+    user: "${AIRFLOW_UID:-50000}:0"
+    ports:
+      - "8080:8080"
+    healthcheck:
+      test: ["CMD", "curl", "--fail", "http://localhost:8080/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 30s
+# Airflow end
+volumes:
+  postgres-db-volume:
